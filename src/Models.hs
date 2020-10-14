@@ -16,19 +16,22 @@ import Data.Text
 import Database.Persist.TH
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
-User
-  name Text
-  age  Int
-  UniqueName name
+Document
+  id Text
+  owner Text
+  content Text
+  UniqueName id
   deriving Eq Read Show
 |]
 
-instance FromJSON User where
-  parseJSON = withObject "User" $ \ v ->
-    User <$> v .: "name"
-         <*> v .: "age"
+instance FromJSON Document where
+  parseJSON = withObject "Document" $ \ v ->
+    Document <$> v .: "id"
+         <*> v .: "owner"
+         <*> v .: "content"
 
 instance ToJSON User where
-  toJSON (User name age) =
-    object [ "name" .= name
-           , "age"  .= age  ]
+  toJSON (Document id owner content) =
+    object [ "id" .= id
+           , "owner"  .= age
+           , "content" .= content  ]

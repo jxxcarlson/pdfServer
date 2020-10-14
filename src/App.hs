@@ -24,22 +24,22 @@ import           Models
 
 server :: ConnectionPool -> Server Api
 server pool =
-  userAddH :<|> userGetH
+  docAddH :<|> docGetH
   where
-    userAddH newUser = liftIO $ userAdd newUser
-    userGetH name    = liftIO $ userGet name
+    docAddH newDocument = liftIO $ docAdd newDocument
+    docGetH name    = liftIO $ docGet name
 
-    userAdd :: User -> IO (Maybe (Key User))
-    userAdd newUser = flip runSqlPersistMPool pool $ do
-      exists <- selectFirst [UserName ==. (userName newUser)] []
+    docAdd :: Document -> IO (Maybe (Key Document))
+    docAdd newDocument = flip runSqlPersistMPool pool $ do
+      exists <- selectFirst [DocumentName ==. (docName newDocument)] []
       case exists of
-        Nothing -> Just <$> insert newUser
+        Nothing -> Just <$> insert newDocument
         Just _ -> return Nothing
 
-    userGet :: Text -> IO (Maybe User)
-    userGet name = flip runSqlPersistMPool pool $ do
-      mUser <- selectFirst [UserName ==. name] []
-      return $ entityVal <$> mUser
+    docGet :: Text -> IO (Maybe Document)
+    docGet name = flip runSqlPersistMPool pool $ do
+      mDocument <- selectFirst [DocumentName ==. name] []
+      return $ entityVal <$> mDocument
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
