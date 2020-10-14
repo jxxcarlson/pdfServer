@@ -30,21 +30,19 @@ server pool =
   documentAddH :<|> documentGetH
   where
     documentAddH newDocument = liftIO $ documentAdd newDocument
-    documentGetH name    = liftIO $ documentGet name
+    documentGetH docId    = liftIO $ documentGet docId
 
     documentAdd :: Document -> IO (Maybe (Key Document))
     documentAdd newDocument = flip runSqlPersistMPool pool $ do
       -- map (\() -> Nothing) (putStrLn $ unpack $ documentDocId newDocument)
-      do 
-        putStrLn $ unpack $ documentDocId newDocument
       exists <- selectFirst [DocumentDocId ==. (documentDocId newDocument)] []
       case exists of
         Nothing -> Just <$> insert newDocument
         Just _ -> return Nothing
 
     documentGet :: Text -> IO (Maybe Document)
-    documentGet name = flip runSqlPersistMPool pool $ do
-      mDocument <- selectFirst [DocumentDocId ==. name] []
+    documentGet docId = flip runSqlPersistMPool pool $ do
+      mDocument <- selectFirst [DocumentDocId ==. docId] []
       return $ entityVal <$> mDocument
 
 app :: ConnectionPool -> Application
