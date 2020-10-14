@@ -22,6 +22,9 @@ import           Servant
 import           Api
 import           Models
 
+import           System.IO (putStrLn)
+import           Data.Text (unpack)
+
 server :: ConnectionPool -> Server Api
 server pool =
   documentAddH :<|> documentGetH
@@ -31,6 +34,9 @@ server pool =
 
     documentAdd :: Document -> IO (Maybe (Key Document))
     documentAdd newDocument = flip runSqlPersistMPool pool $ do
+      -- map (\() -> Nothing) (putStrLn $ unpack $ documentDocId newDocument)
+      do 
+        putStrLn $ unpack $ documentDocId newDocument
       exists <- selectFirst [DocumentDocId ==. (documentDocId newDocument)] []
       case exists of
         Nothing -> Just <$> insert newDocument
