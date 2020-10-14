@@ -1,0 +1,3 @@
+scripts:
+  exec: stack exec example-servant-persistent
+  
