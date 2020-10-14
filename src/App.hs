@@ -24,6 +24,16 @@ import           Models
 
 import           System.IO (putStrLn)
 import           Data.Text (unpack)
+import           Process
+
+writeDocument :: Document -> IO()
+writeDocument doc = 
+  let
+    fileName = "texfiles/" ++ (unpack $ documentDocId doc) ++ ".tex"
+    contents = unpack $ documentContent doc
+  in
+    writeFile fileName contents
+
 
 server :: ConnectionPool -> Server Api
 server pool =
@@ -34,16 +44,18 @@ server pool =
 
     documentAdd :: Document -> IO (Maybe (Key Document))
     documentAdd newDocument = flip runSqlPersistMPool pool $ do
-      -- map (\() -> Nothing) (putStrLn $ unpack $ documentDocId newDocument)
+      -- pure (putStrLn $ unpack $ documentDocId newDocument)
+      -- pure (writeFile "foo" "bar")
+      pure $ writeDocument newDocument
       exists <- selectFirst [DocumentDocId ==. (documentDocId newDocument)] []
       case exists of
         Nothing -> Just <$> insert newDocument
-        Just _ -> return Nothing
+        Just _ -> pure Nothing
 
     documentGet :: Text -> IO (Maybe Document)
     documentGet docId = flip runSqlPersistMPool pool $ do
       mDocument <- selectFirst [DocumentDocId ==. docId] []
-      return $ entityVal <$> mDocument
+      pure $ entityVal <$> mDocument
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool

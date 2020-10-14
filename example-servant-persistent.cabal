@@ -15,6 +15,7 @@ executable example-servant-persistent
   other-modules:       Api
                      , App
                      , Models
+                     , Process
   build-depends:       base >=4.8 && <4.11
                      , aeson
                      , monad-logger
@@ -28,6 +29,9 @@ executable example-servant-persistent
                      , transformers
                      , wai
                      , warp
+                     , process >=1.6.1.0
+                     , MissingH >=1.4.0.1
+                     , raw-strings-qq  >=1.1
   hs-source-dirs:      src
   default-language:    Haskell2010
 

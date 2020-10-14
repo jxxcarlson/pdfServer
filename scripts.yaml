@@ -1,3 +1,4 @@
 scripts:
   exec: stack exec example-servant-persistent
   
+  cloc: cloc --by-file src
