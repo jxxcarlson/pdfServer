@@ -29,7 +29,7 @@ import           Process
 writeDocument :: Document -> IO()
 writeDocument doc = 
   let
-    fileName = "texfiles/" ++ (unpack $ documentDocId doc) ++ ".tex"
+    fileName = "texFiles/" ++ (unpack $ documentDocId doc) ++ ".tex"
     contents = unpack $ documentContent doc
   in
     writeFile fileName contents
@@ -44,9 +44,8 @@ server pool =
 
     documentAdd :: Document -> IO (Maybe (Key Document))
     documentAdd newDocument = flip runSqlPersistMPool pool $ do
-      -- pure (putStrLn $ unpack $ documentDocId newDocument)
-      -- pure (writeFile "foo" "bar")
-      pure $ writeDocument newDocument
+      liftIO $ writeDocument newDocument
+      liftIO $ publishPdf (unpack $ documentDocId newDocument)
       exists <- selectFirst [DocumentDocId ==. (documentDocId newDocument)] []
       case exists of
         Nothing -> Just <$> insert newDocument

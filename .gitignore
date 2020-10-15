@@ -3,4 +3,5 @@
 /sqlite.db-shm
 /sqlite.db-wal
 pdfFiles/*.*
+texFiles/*.*
 
