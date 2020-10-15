@@ -1,4 +1,4 @@
-name:                example-servant-persistent
+name:                pdfServer
 version:             0.1.0.0
 synopsis:            example with persistent and servant
 description:         Simple example to illustrate how to use persistent and servant in combination.
@@ -10,7 +10,7 @@ category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable example-servant-persistent
+executable pdfServer
   main-is:             Main.hs
   other-modules:       Api
                      , App

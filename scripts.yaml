@@ -1,4 +1,5 @@
 scripts:
-  exec: stack exec example-servant-persistent
+
+  exec: stack exec pdfServer
   
   cloc: cloc --by-file src
